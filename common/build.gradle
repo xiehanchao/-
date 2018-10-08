@@ -29,7 +29,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     api deps.support.app_compat
-
     //router
     api deps.arouter_api
+
+    api deps.okio
+    api deps.okhttp
 }
