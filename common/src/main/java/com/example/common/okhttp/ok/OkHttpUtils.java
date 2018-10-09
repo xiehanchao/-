@@ -1,4 +1,4 @@
-package okhttp.ok;
+package com.example.common.okhttp.ok;
 
 import android.util.Log;
 
@@ -6,7 +6,7 @@ import android.util.Log;
 import java.util.Iterator;
 import java.util.Map;
 
-import okhttp.StringUtils;
+import com.example.common.okhttp.StringUtils;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.Headers;

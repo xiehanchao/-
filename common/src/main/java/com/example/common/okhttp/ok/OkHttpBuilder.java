@@ -1,4 +1,4 @@
-package okhttp.ok;
+package com.example.common.okhttp.ok;
 
 
 import android.util.Log;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp.IOUtils;
+import com.example.common.okhttp.IOUtils;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;

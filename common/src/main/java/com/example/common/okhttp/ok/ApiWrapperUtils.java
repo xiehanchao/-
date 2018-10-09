@@ -1,9 +1,7 @@
-package okhttp.ok;
+package com.example.common.okhttp.ok;
 
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 
 import okhttp3.Call;

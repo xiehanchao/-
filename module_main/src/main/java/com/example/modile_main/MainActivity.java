@@ -3,7 +3,7 @@ package com.example.modile_main;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import okhttp.ok.ApiWrapperUtils;
+import com.example.common.okhttp.ok.ApiWrapperUtils;
 
 public class MainActivity extends AppCompatActivity {
 

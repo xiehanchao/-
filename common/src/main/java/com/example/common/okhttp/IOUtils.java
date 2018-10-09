@@ -1,4 +1,4 @@
-package okhttp;
+package com.example.common.okhttp;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
