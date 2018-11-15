@@ -1,15 +1,20 @@
 package com.example.common.okhttp.ok;
 
 
+import android.content.Context;
 import android.util.Log;
 
 
+import com.example.common.okhttp.IOUtils;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.example.common.okhttp.IOUtils;
+import okhttp3.Cache;
+import okhttp3.CacheControl;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -68,8 +73,26 @@ public class OkHttpBuilder {
      */
     private List<Interceptor> mInterceptors = new ArrayList<>();
 
+    private List<Interceptor> mCache = new ArrayList<>();
+
+    public  static Context context;
+
     public OkHttpBuilder() {
         this.mInterceptors.add(this.getLogInterceptor());
+        //this.mCache.add(new CacheInterceptor());
+    }
+
+    class CacheInterceptor implements Interceptor{
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+
+            Response originResponse = chain.proceed(chain.request());
+
+            //设置缓存时间为60秒，并移除了pragma消息头，移除它的原因是因为pragma也是控制缓存的一个消息头属性
+            return originResponse.newBuilder().removeHeader("pragma")
+                    .header("Cache-Control","max-age=60").build();
+        }
     }
 
     /**
@@ -122,6 +145,11 @@ public class OkHttpBuilder {
                 if (requestBody != null && !request.method().equals("GET")) {
                     requestBuilder.method(request.method(),requestBody);
                 }
+                CacheControl FORCE_CACHE = new CacheControl.Builder()
+                        .onlyIfCached()
+                        .maxStale(5, TimeUnit.SECONDS)
+                        .build();
+                //requestBuilder.cacheControl(CacheControl.FORCE_CACHE);
                 Request newRequest = requestBuilder.build();
 
                 // 打印请求数据
@@ -155,18 +183,33 @@ public class OkHttpBuilder {
         };
     }
 
+
+
     /**
      * 构建OkHttpClient对象
      *
      * @return OkHttpClient对象
      */
     public OkHttpClient build() {
+
+        //缓存文件夹
+        File cacheFile = new File(context.getExternalCacheDir().toString(),"cache11");
+        System.out.println("cacheFile = " + cacheFile);
+        //缓存大小为10M
+        int cacheSize = 10 * 1024 * 1024;
+        //创建缓存对象
+        final Cache cache = new Cache(cacheFile,cacheSize);
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(mConnectTimeout, TimeUnit.SECONDS)
                 .readTimeout(mReadTimeOut, TimeUnit.SECONDS)
                 .writeTimeout(mWriteTimeOut, TimeUnit.SECONDS);
+                //.cache(cache);
         for (Interceptor interceptor : mInterceptors) {
             builder.addInterceptor(interceptor);
+        }
+
+        for (Interceptor interceptor : mCache) {
+            builder.addNetworkInterceptor(interceptor);
         }
         return builder.build();
     }
